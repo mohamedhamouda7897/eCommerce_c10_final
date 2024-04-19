@@ -15,7 +15,8 @@ import '../../../../core/components/reuseable_components.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
-  var emailController = TextEditingController();
+  String email = "";
+
   var passwordController = TextEditingController();
 
   @override
@@ -52,11 +53,17 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  routeField(
-                      controller: emailController,
-                      label: "Email",
-                      radius: 16,
-                      setBackgroundColor: true),
+                  TextFormField(
+                    onChanged: (value) {
+                      email = value;
+                    },
+                  )
+                  // routeField(
+                  //     controller: emailController,
+                  //     label: "Email",
+                  //     radius: 16,
+                  //     setBackgroundColor: true),
+                  ,
                   SizedBox(
                     height: 18.h,
                   ),

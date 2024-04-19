@@ -1,5 +1,7 @@
 import 'package:e_commerce_c10_monday/config.dart';
+import 'package:e_commerce_c10_monday/config/routes/app_router.dart';
 import 'package:e_commerce_c10_monday/core/api/api_manager.dart';
+import 'package:e_commerce_c10_monday/core/enums/enums.dart';
 import 'package:e_commerce_c10_monday/core/utils/app_colors.dart';
 import 'package:e_commerce_c10_monday/features/home/data/data_sources/home_ds_impl.dart';
 import 'package:e_commerce_c10_monday/features/home/data/repositories/home_repo_impl.dart';
@@ -24,8 +26,13 @@ class HomeScreen extends StatelessWidget {
       create: (context) => getIt<HomeBloc>()
         ..add(GetBrandsEvent())
         ..add(GetProductsEvent())
-        ..add(GetCategoriesEvent()),
-      child: BlocBuilder<HomeBloc, HomeState>(
+        ..add(GetCategoriesEvent())
+        ..add(GetCartEvent()),
+      child: BlocConsumer<HomeBloc, HomeState>(
+        listener: (context, state) {
+
+
+        },
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
@@ -93,11 +100,16 @@ class HomeScreen extends StatelessWidget {
                         width: 20,
                       ),
                       InkWell(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.shopping_cart,
-                          size: 30.0.sp,
-                          color: Color(0xff004182),
+                        onTap: () {
+                          Navigator.pushNamed(context, AppRoutesName.cart);
+                        },
+                        child: Badge(
+                          label: Text(state.cartItems.toString()),
+                          child: Icon(
+                            Icons.shopping_cart,
+                            size: 30.0.sp,
+                            color: Color(0xff004182),
+                          ),
                         ),
                       ),
                     ],

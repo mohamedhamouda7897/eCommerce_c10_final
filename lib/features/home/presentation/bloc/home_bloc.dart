@@ -4,7 +4,9 @@ import 'package:e_commerce_c10_monday/core/errors/failuers.dart';
 import 'package:e_commerce_c10_monday/features/home/data/models/BrandModel.dart';
 import 'package:e_commerce_c10_monday/features/home/data/models/CategoryModel.dart';
 import 'package:e_commerce_c10_monday/features/home/data/models/ProductModel.dart';
+import 'package:e_commerce_c10_monday/features/home/domain/use_cases/add_product_to_cart.dart';
 import 'package:e_commerce_c10_monday/features/home/domain/use_cases/get_brands_useCase.dart';
+import 'package:e_commerce_c10_monday/features/home/domain/use_cases/get_cart.dart';
 import 'package:e_commerce_c10_monday/features/home/domain/use_cases/get_categories_useCase.dart';
 import 'package:e_commerce_c10_monday/features/home/domain/use_cases/get_products_usecase.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -20,11 +22,17 @@ part 'home_bloc.freezed.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   GetBrandsUseCase getBrandsUseCase;
   GetProductsUseCase getProductsUseCase;
+
+  GetCartUseCase getCartUseCase;
+  AddProductToCartUseCase addProductToCartUseCase;
   GetCategoriesUseCase getCategoriesUseCase;
 
-  HomeBloc({required this.getBrandsUseCase,
-    required this.getProductsUseCase,
-    required this.getCategoriesUseCase})
+  HomeBloc(
+      {required this.getBrandsUseCase,
+      required this.getProductsUseCase,
+      required this.getCartUseCase,
+      required this.addProductToCartUseCase,
+      required this.getCategoriesUseCase})
       : super(const HomeState()) {
     on<GetBrandsEvent>((event, emit) async {
       emit(state.copyWith(getBrandsStatus: RequestStatus.loading));
@@ -52,7 +60,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       });
     });
 
-    on<GetProductsEvent>((event, emit) async{
+    on<GetProductsEvent>((event, emit) async {
       emit(state.copyWith(getProductsStatus: RequestStatus.loading));
       var result = await getProductsUseCase();
 
@@ -66,6 +74,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
     on<ChangeNavBar>((event, emit) {
       emit(state.copyWith(currentIndex: event.index));
+    });
+    on<AddToCart>((event, emit) async {
+      emit(state.copyWith(addToCart: RequestStatus.loading));
+      var result = await addProductToCartUseCase(productId: event.productID);
+
+      result.fold((l) {
+        emit(state.copyWith(addToCart: RequestStatus.failure));
+      }, (r) {
+        emit(state.copyWith(addToCart: RequestStatus.success));
+      });
+    });
+
+    on<GetCartEvent>((event, emit) async {
+      emit(state.copyWith(
+          getCartStatus: RequestStatus.loading, addToCart: RequestStatus.init));
+      var result = await getCartUseCase();
+
+      result.fold((l) {
+        emit(state.copyWith(getCartStatus: RequestStatus.failure));
+      }, (r) {
+        emit(state.copyWith(
+            getCartStatus: RequestStatus.success,
+            cartItems: r.numOfCartItems ?? 0));
+      });
     });
   }
 }

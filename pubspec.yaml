@@ -27,6 +27,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   dio: ^5.4.2+1
   equatable: ^2.0.5
+  shared_preferences: ^2.2.3
+  loader_overlay: ^4.0.0
   dartz: ^0.10.1
   flutter_bloc: ^8.1.5
   bloc: ^8.1.4
