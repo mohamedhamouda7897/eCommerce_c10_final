@@ -16,10 +16,12 @@ import 'features/home/data/data_sources/home_ds.dart' as _i6;
 import 'features/home/data/data_sources/home_ds_impl.dart' as _i7;
 import 'features/home/data/repositories/home_repo_impl.dart' as _i12;
 import 'features/home/domain/repositories/home_repo.dart' as _i11;
+import 'features/home/domain/use_cases/add_to_cart.dart' as _i17;
 import 'features/home/domain/use_cases/get_brands_useCase.dart' as _i14;
+import 'features/home/domain/use_cases/get_cart_items.dart' as _i18;
 import 'features/home/domain/use_cases/get_categories_useCase.dart' as _i15;
 import 'features/home/domain/use_cases/get_products_usecase.dart' as _i16;
-import 'features/home/presentation/bloc/home_bloc.dart' as _i17;
+import 'features/home/presentation/bloc/home_bloc.dart' as _i19;
 import 'features/login/data/datasources/remote/login_ds.dart' as _i4;
 import 'features/login/data/datasources/remote/login_remote_ds_impl.dart'
     as _i5;
@@ -52,9 +54,15 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i15.GetCategoriesUseCase(gh<_i11.HomeRepo>()));
     gh.factory<_i16.GetProductsUseCase>(
         () => _i16.GetProductsUseCase(gh<_i11.HomeRepo>()));
-    gh.factory<_i17.HomeBloc>(() => _i17.HomeBloc(
+    gh.factory<_i17.AddToCartUseCase>(
+        () => _i17.AddToCartUseCase(gh<_i11.HomeRepo>()));
+    gh.factory<_i18.GetCartItemsUseCase>(
+        () => _i18.GetCartItemsUseCase(gh<_i11.HomeRepo>()));
+    gh.factory<_i19.HomeBloc>(() => _i19.HomeBloc(
           getBrandsUseCase: gh<_i14.GetBrandsUseCase>(),
           getProductsUseCase: gh<_i16.GetProductsUseCase>(),
+          addToCartUseCase: gh<_i17.AddToCartUseCase>(),
+          getCartItemsUseCase: gh<_i18.GetCartItemsUseCase>(),
           getCategoriesUseCase: gh<_i15.GetCategoriesUseCase>(),
         ));
     return this;

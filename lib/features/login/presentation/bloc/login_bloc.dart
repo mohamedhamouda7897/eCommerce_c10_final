@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:e_commerce_c10_monday/core/cache/shared_pref.dart';
 import 'package:e_commerce_c10_monday/core/enums/enums.dart';
 import 'package:e_commerce_c10_monday/core/errors/failuers.dart';
 import 'package:e_commerce_c10_monday/features/login/domain/entity/ResponseEntity.dart';
@@ -7,11 +8,13 @@ import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
 part 'login_event.dart';
+
 part 'login_state.dart';
 
 @injectable
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginUseCase loginUseCase;
+
   LoginBloc(this.loginUseCase) : super(LoginInitialState()) {
     on<LoginEvent>((event, emit) {
       // TODO: implement event handler
@@ -25,6 +28,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       result.fold((l) {
         emit(state.copyWith(status: RequestStatus.failure, failures: l));
       }, (r) {
+        CacheHelper.saveData("Token", r.token);
         emit(state.copyWith(status: RequestStatus.success, responseEntity: r));
       });
     });
